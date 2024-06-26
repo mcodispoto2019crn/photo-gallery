@@ -1,0 +1,7 @@
+{
+  "name": "prueba-photo-gallery",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
