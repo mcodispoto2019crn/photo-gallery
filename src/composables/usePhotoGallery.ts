@@ -4,6 +4,15 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Preferences } from '@capacitor/preferences';
 import { isPlatform } from '@ionic/vue';
 import { Capacitor } from '@capacitor/core';
+import { Geolocation } from '@capacitor/geolocation';
+
+const printCurrentPosition = async () => {
+  const coordinates = await Geolocation.getCurrentPosition();
+
+  console.log('Current position:', coordinates);
+  const { latitude, longitude } = coordinates.coords;
+  return { latitude, longitude };
+};
 
 const photos = ref<UserPhoto[]>([]);
 const PHOTO_STORAGE = 'photos';
@@ -11,6 +20,10 @@ const PHOTO_STORAGE = 'photos';
 export interface UserPhoto {
   filepath: string;
   webviewPath?: string;
+  ubication:{
+    latitude:number,
+    longitude:number
+  };
 }
 
 export const usePhotoGallery = () => {
@@ -21,6 +34,8 @@ export const usePhotoGallery = () => {
       quality: 100,
     });
     const fileName:string = Date.now() + '.jpeg' as string;
+    const coordinates = await printCurrentPosition();
+    photo.ubication = coordinates;
     const savedFileImage = await savePicture(photo, fileName);
     console.log('PHOTO', photo);
     photos.value = [savedFileImage, ...photos.value];
@@ -72,7 +87,7 @@ const savePicture = async (photo: Photo, fileName: string): Promise<UserPhoto> =
   const savedFile = await Filesystem.writeFile({
     path: fileName,
     data: base64Data,
-    directory: Directory.Data,
+    directory: Directory.Data
   });
 
   if (isPlatform('hybrid')) {
@@ -81,6 +96,7 @@ const savePicture = async (photo: Photo, fileName: string): Promise<UserPhoto> =
     return {
       filepath: savedFile.uri,
       webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+      ubication: photo.ubication
     };
   } else {
     // Use webPath to display the new image instead of base64 since it's
@@ -88,6 +104,7 @@ const savePicture = async (photo: Photo, fileName: string): Promise<UserPhoto> =
     return {
       filepath: fileName,
       webviewPath: photo.webPath,
+      ubication: photo.ubication
     };
   }
 };  
