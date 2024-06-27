@@ -42,21 +42,6 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router);
 
-  import * as LiveUpdates from '@capacitor/live-updates';
 router.isReady().then(() => {
   app.mount('#app');
-})
-
-App.addListener('resume', async () => {
-  if (localStorage.shouldReloadApp === 'true') {
-    await LiveUpdates.reload();
-  }
-  else {
-    const result = await LiveUpdates.sync();
-    localStorage.shouldReloadApp = result.activeApplicationPathChanged;
-  }
 });
-
-// First sync on app load
-const result = await LiveUpdates.sync();
-localStorage.shouldReloadApp = result.activeApplicationPathChanged;
