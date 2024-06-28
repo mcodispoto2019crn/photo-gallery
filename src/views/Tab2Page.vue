@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        
+       
         <ion-title><ion-icon :icon="imagesOutline"></ion-icon> Photo Gallery</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -30,7 +30,7 @@
     </ion-content>
   </ion-page>
 </template>
-
+ 
 <script setup lang="ts">
 import { onMounted, watch } from 'vue';
 import {
@@ -49,20 +49,20 @@ import {
   IonImg,
   // IonButton
 } from '@ionic/vue';
-import { usePhotoGallery , UserPhoto, saveCachePhotos, loadSaved, 
+import { usePhotoGallery , UserPhoto, saveCachePhotos, loadSaved,
   // removeCachePhotos
  } from '@/composables/usePhotoGallery';
 import { imagesOutline, camera, trash, close} from 'ionicons/icons';
-
+ 
 const { photos , takePhoto, deletePhoto  } = usePhotoGallery();
 watch(photos, saveCachePhotos);
 onMounted(() => {
   loadSaved();
 });
-
+ 
 const showActionSheet = async (photo: UserPhoto) => {
   const actionSheet = await actionSheetController.create({
-    header: 'Photos',
+    header: 'Foto hecha en: '+photo.ubication.address,
     buttons: [
       {
         text: 'Delete',
