@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",    
     "vueinstall": "vue-tsc && vite build",
-    "build": "npm install \"npm run vueinstall\"",
+    "build": "npm install --vueinstall",
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
