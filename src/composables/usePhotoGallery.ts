@@ -11,7 +11,20 @@ const printCurrentPosition = async () => {
 
   console.log('Current position:', coordinates);
   const { latitude, longitude } = coordinates.coords;
-  return { latitude, longitude };
+  
+let address = ''
+await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      console.log('Geocodificación inversa fallida:', data.error);
+    } else {
+      address = data.display_name;
+      console.log(`La dirección es: ${address}`);
+    }
+  })
+  .catch(error => console.log('Error:', error));
+  return { latitude, longitude, address };
 };
 
 const photos = ref<UserPhoto[]>([]);
@@ -22,7 +35,8 @@ export interface UserPhoto {
   webviewPath?: string;
   ubication:{
     latitude:number,
-    longitude:number
+    longitude:number,
+    address:string
   };
 }
 
